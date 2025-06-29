@@ -1,0 +1,221 @@
+.
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>اختبار التعليم العام والمهني</title>
+<style>
+  body {
+    font-family: "Arial", sans-serif;
+    background: #eef6fb;
+    margin: 0; padding: 20px;
+    text-align: right;
+  }
+  .container {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #a0c8f0;
+  }
+  h1 {
+    color: #004080;
+    margin-bottom: 20px;
+  }
+  .question {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+  }
+  .options label {
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 1.1em;
+  }
+  button {
+    background: #004080;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  button:disabled {
+    background: #888;
+    cursor: default;
+  }
+  .feedback {
+    margin-top: 18px;
+    font-weight: bold;
+    font-size: 1.15em;
+  }
+  .score {
+    font-size: 1.4em;
+    margin-top: 25px;
+    color: #007700;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>اختبار التعليم العام والمهني</h1>
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <button id="submit" disabled>إرسال</button>
+      <div class="feedback" id="feedback"></div>
+      <div class="score" id="score"></div>
+    </div>
+  </div>
+
+<script>
+  const quizData = [
+    { question: "ما هو الهدف الأساسي من التعليم العام في لبنان؟",
+      options: ["إعداد عمال مهنيين", "إعداد مقاتلين", "اكتساب مهارات ومعارف أساسية", "تدريب على الزراعة"],
+      answer: "اكتساب مهارات ومعارف أساسية" },
+    { question: "ما هي مدة مرحلة الروضة في التعليم العام؟",
+      options: ["سنة واحدة", "ثلاث سنوات", "سنتان", "أربع سنوات"],
+      answer: "سنتان" },
+    { question: "في أي عمر يدخل التلميذ المرحلة المتوسطة؟",
+      options: ["10 سنوات", "12 سنة", "14 سنة", "16 سنة"],
+      answer: "12 سنة" },
+    { question: "إلى كم مرحلة يُقسم التعليم العام في لبنان؟",
+      options: ["مرحلتين", "ثلاث مراحل", "أربع مراحل", "مرحلة واحدة"],
+      answer: "ثلاث مراحل" },
+    { question: "أي فرع من فروع الشهادة الثانوية يؤدي إلى دراسة الحقوق؟",
+      options: ["علوم الحياة", "علوم عامة", "اجتماع واقتصاد", "الآداب والإنسانيات"],
+      answer: "الآداب والإنسانيات" },
+    { question: "ما هي أول شهادة يمكن الحصول عليها في حقل التأهيل المهني؟",
+      options: ["bp", "bt", "cap", "lt"],
+      answer: "cap" },
+    { question: "ما هي الشهادة التي تُمنح بعد ثلاث سنوات من الدراسة بعد bt؟",
+      options: ["ts", "bp", "lt", "cap"],
+      answer: "ts" },
+    { question: "ما هو مفهوم التعليم المهني؟",
+      options: ["تعليم ديني", "تعليم فكري", "تعليم مرتبط بسوق العمل", "تعليم للترفيه"],
+      answer: "تعليم مرتبط بسوق العمل" },
+    { question: "ماذا تعني السيرة المهنية؟",
+      options: ["راتب الوظيفة", "عدد أيام العمل", "تعداد المهن المتتالية", "مدة الإجازة"],
+      answer: "تعداد المهن المتتالية" },
+    { question: "ما هو الغرض من تصنيف المهن؟",
+      options: ["فصل المهن عن العمل", "تجميع المهن المتشابهة", "إلغاء المهن", "منع مزاولة المهن"],
+      answer: "تجميع المهن المتشابهة" },
+    { question: "ماذا تعني عبارة التعليم واحد ومستمر؟",
+      options: ["ينتهي بعد الجامعة", "متنوع ومقتصر على المدرسة", "لا يتغير", "يتعدى المدرسة إلى كل الحياة"],
+      answer: "يتعدى المدرسة إلى كل الحياة" },
+    { question: "أي من الشهادات التالية تُمنح بعد ts؟",
+      options: ["cap", "bp", "bt", "lt"],
+      answer: "lt" },
+    { question: "في أي نوع من المدارس يمكن تحضير شهادة الامتياز الفني؟",
+      options: ["مدارس ابتدائية", "مدارس ثانوية", "مدارس مهنية", "مدارس رسمية فقط"],
+      answer: "مدارس مهنية" },
+    { question: "من أهداف التعليم العام:",
+      options: ["الربح المالي", "تنمية الفرد والمجتمع", "إعداد الجنود", "السفر للخارج"],
+      answer: "تنمية الفرد والمجتمع" },
+    { question: "ما هو أحد شروط التدرج المهني؟",
+      options: ["السفر", "العلاقات السياسية", "الخبرة والتعليم المستمر", "الواسطة"],
+      answer: "الخبرة والتعليم المستمر" },
+    { question: "ما هو المقصود بالمناهج التعليمية؟",
+      options: ["مباني المدارس", "عدد الطلاب في الصف", "محتوى المواد الدراسية", "توزيع الشهادات"],
+      answer: "محتوى المواد الدراسية" },
+    { question: "أي فرع في الثانوية يناسب من يريد دخول مهنة التمريض؟",
+      options: ["الآداب", "علوم الحياة", "الاقتصاد", "الإنسانيات"],
+      answer: "علوم الحياة" },
+    { question: "ما هو الهدف من التعليم بحسب الأمم المتحدة؟",
+      options: ["إخضاع الأفراد", "الربح المادي", "تحرير الإنسان من الجهل والفقر", "الخدمة العسكرية"],
+      answer: "تحرير الإنسان من الجهل والفقر" },
+    { question: "ما هي شهادة bp؟",
+      options: ["البكالوريا الفرنسية", "شهادة تكميلية مهنية", "شهادة تربوية", "شهادة مهنية جامعية"],
+      answer: "شهادة تكميلية مهنية" },
+    { question: "أي نوع من المدارس يملكها أفراد؟",
+      options: ["رسمية", "خاصة", "عسكرية", "مفتوحة"],
+      answer: "خاصة" },
+    { question: "متى يبدأ الطالب في لبنان التعليم الثانوي؟",
+      options: ["بعد الصف السابع", "بعد الصف التاسع", "في عمر 10", "في عمر 12"],
+      answer: "بعد الصف التاسع" },
+    { question: "أي الشهادات تمنح في حقل التعليم الفني؟",
+      options: ["ts و lt", "bp و cap", "bt فقط", "fpm و cap"],
+      answer: "ts و lt" },
+    { question: "ماذا يساهم التعليم في تحقيقه؟",
+      options: ["الجهل", "عدم المساواة", "الديمقراطية", "العزلة"],
+      answer: "الديمقراطية" },
+    { question: "من المهارات الضرورية لمستقبل مهني ناجح:",
+      options: ["إتقان اللغات والمعلوماتية", "الحضور اليومي فقط", "اللباس الرسمي", "العمل بدون توقف"],
+      answer: "إتقان اللغات والمعلوماتية" },
+    { question: "ما هو النظام المزدوج؟",
+      options: ["تعليم جامعي", "تعليم في المدرسة والمصنع", "تعليم في الخارج", "تعليم مسائي"],
+      answer: "تعليم في المدرسة والمصنع" }
+  ];
+
+  let currentIndex = 0;
+  let score = 0;
+
+  const questionEl = document.getElementById("question");
+  const optionsEl = document.getElementById("options");
+  const submitBtn = document.getElementById("submit");
+  const feedbackEl = document.getElementById("feedback");
+  const scoreEl = document.getElementById("score");
+
+  function loadQuestion() {
+    feedbackEl.textContent = "";
+    submitBtn.disabled = true;
+
+    const currentQ = quizData[currentIndex];
+    questionEl.textContent = (currentIndex + 1) + ". " + currentQ.question;
+
+    optionsEl.innerHTML = "";
+    currentQ.options.forEach((opt, idx) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "option";
+      input.value = opt;
+      input.id = "opt" + idx;
+      input.addEventListener("change", () => {
+        submitBtn.disabled = false;
+      });
+      label.htmlFor = "opt" + idx;
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(" " + opt));
+      optionsEl.appendChild(label);
+    });
+  }
+
+  submitBtn.addEventListener("click", () => {
+    const selected = document.querySelector('input[name="option"]:checked');
+    if (!selected) return;
+
+    const currentQ = quizData[currentIndex];
+    if (selected.value === currentQ.answer) {
+      score++;
+      feedbackEl.style.color = "green";
+      feedbackEl.textContent = "إجابة صحيحة!";
+    } else {
+      feedbackEl.style.color = "red";
+      feedbackEl.textContent = "إجابة خاطئة. الإجابة الصحيحة: " + currentQ.answer;
+    }
+
+    submitBtn.disabled = true;
+
+    currentIndex++;
+    if (currentIndex < quizData.length) {
+      setTimeout(loadQuestion, 2000);
+    } else {
+      setTimeout(() => {
+        questionEl.textContent = "انتهى الاختبار!";
+        optionsEl.innerHTML = "";
+        feedbackEl.textContent = "";
+        scoreEl.textContent = `نتيجتك: ${score} من ${quizData.length}`;
+        submitBtn.style.display = "none";
+      }, 2000);
+    }
+  });
+
+  loadQuestion();
+</script>
+</body>
+</html>
